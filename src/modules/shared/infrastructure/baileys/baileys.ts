@@ -2,11 +2,11 @@ import { WAConnection, MessageType, WAChatUpdate } from '@adiwajshing/baileys'
 import Command from '../../domain/command'
 import sharp from 'sharp'
 import streamifier from 'streamifier'
-import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
+// import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import fluent from 'fluent-ffmpeg'
 import tmp from 'tmp'
 import fs from 'fs'
-const ffprobe = require('@ffprobe-installer/ffprobe')
+// const ffprobe = require('@ffprobe-installer/ffprobe')
 
 class Baileys {
     private connection: WAConnection
@@ -92,8 +92,8 @@ class Baileys {
                     const tempName = `${tempObject.name}.webp`
 
                     const ffmpeg = fluent()
-                        .setFfprobePath(ffprobe.path)
-                        .setFfmpegPath(ffmpegInstaller.path)
+                        // .setFfprobePath(ffprobe.path)
+                        // .setFfmpegPath(ffmpegInstaller.path)
                     
                     await new Promise((resolve, reject) => {
                         ffmpeg
