@@ -18,12 +18,21 @@
   "homepage": "https://github.com/jobs2021/whatsapp-bot#readme",
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.2",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^1.2.0",
+    "@types/tmp": "^0.2.1",
     "dotenv": "^10.0.0",
     "envalid": "^7.2.1",
-    "sharp": "^0.29.1"
+    "fluent-ffmpeg": "^2.1.2",
+    "gifify": "^2.4.3",
+    "sharp": "^0.29.1",
+    "streamifier": "^0.1.1",
+    "tmp": "^0.2.1"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.18",
     "@types/sharp": "^0.29.2",
+    "@types/streamifier": "^0.1.0",
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5"
   }
