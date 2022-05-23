@@ -8,7 +8,6 @@ export class BaileysMessageCommandBus implements MessageCommandBus {
     private socket: BaileysSocket
 
     constructor() {
-        console.log('loading:', 'BaileysMessageCommandBus')
         this.socket = new BaileysConnection().socket
     }
 
@@ -20,7 +19,6 @@ export class BaileysMessageCommandBus implements MessageCommandBus {
         })
     }
     send(body: SendData): void {
-        console.log(body)
         const payload = SendMessageMapper.toSocket(body)
         this.socket.sendMessage(body.userId, payload)
     }

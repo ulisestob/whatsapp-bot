@@ -15,12 +15,9 @@ export class VideoStickerUsecase {
         const videoStream = streamifier.createReadStream(media)
         const tempObject = tmp.fileSync()
         const tempName = `${tempObject.name}.webp`
-        console.log('fluent', fluent)
         const ffmpeg = fluent()
-        console.log('ffmpeg', ffmpeg)
         
         await new Promise((resolve, reject) => {
-            console.log('IN:ffmpeg', ffmpeg)
             ffmpeg
                 .input(videoStream)
                 .noAudio()
@@ -33,7 +30,6 @@ export class VideoStickerUsecase {
                 .format('webp')
                 .output(tempName)
                 .on('end', () => {
-                    console.log("Finished Generate from video")
                     resolve(tempName)
                 })
                 .on('error', (e) => {
