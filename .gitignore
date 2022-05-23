@@ -7,3 +7,4 @@
 .idea
 .env
 *.log
+*auth_info_multi_device.json
