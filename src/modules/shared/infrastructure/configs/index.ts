@@ -1,10 +1,10 @@
-import { envalidator } from './envalidator'
+// import { envalidator } from './envalidator'
 import 'dotenv/config'
 
-const env = envalidator()
+// const env = envalidator()
 
 const configs = {
-    auth: JSON.parse(env.AUTH_INFO)
+    // auth: JSON.parse(env.AUTH_INFO)
 }
 
 export default configs

@@ -1,14 +1,11 @@
-import configs from "./modules/shared/infrastructure/configs"
-import { Baileys } from "./modules/shared/infrastructure/baileys"
-import MenuCommand from "./modules/menu/application/command"
+import "reflect-metadata"
+import './modules/shared/infrastructure/configs'
+import { CommandHandler } from "./modules/commands/infrastructure/commandHandler";
+import { globalIoC } from "./modules/shared/infrastructure/global.ioc";
+import { ModuleLoader } from "./modules/shared/utils/module.loader";
 
-const { auth } = configs
-
-Baileys.start(auth)
-    // .attach('!hola')
-    // .attach('!help')
-    .attachSticker()
-    .attachStickerVideo()
-    .attachHeroes()
-    .attachPlan()
-    .attachCommand(MenuCommand)
+ModuleLoader
+    .setup({
+        globalDependencies: globalIoC,
+        commandModules: [CommandHandler],
+    }).start()
