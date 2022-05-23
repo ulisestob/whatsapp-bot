@@ -22,17 +22,16 @@ export class CommandHandler {
     }
 
     @command('!sticker')
-    async sticker(data: MessageData) {
-        let useCase
-        switch (data.message.type) {
-            case 'image':
-                useCase = this.imageStickerUsecase; break
-            case 'video':
-                useCase = this.videoStickerUsecase; break
-            default:
-                useCase = this.imageStickerUsecase; break
-        }
-        const result = await useCase.execute(data)
-        this.messageBus.send(<any>result)
+    async imageSticker(data: MessageData) {
+        if (data.message.type !== 'image') return
+        const result = await this.imageStickerUsecase.execute(data)
+        this.messageBus.send(result)
+    }
+    
+    @command('!sticker')
+    async videoSticker(data: MessageData) {
+        if (data.message.type !== 'video') return
+        const result = await this.videoStickerUsecase.execute(data)
+        this.messageBus.send(result)
     }
 }
