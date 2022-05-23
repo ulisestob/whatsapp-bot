@@ -3,6 +3,7 @@ import { MessageCommandBus } from "../../domain/interfaces/messageCommandBus.int
 import { MessageData, SendData } from "../../domain/interfaces/types";
 import { BaileysConnection, BaileysSocket } from "./baileys.connection";
 import { SendMessageMapper } from "./baileys.mapper";
+
 @injectable()
 export class BaileysMessageCommandBus implements MessageCommandBus {
     private socket: BaileysSocket
