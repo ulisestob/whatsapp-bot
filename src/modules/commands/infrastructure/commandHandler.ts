@@ -21,14 +21,14 @@ export class CommandHandler {
         this.messageBus.send(result)
     }
 
-    @command('!sticker')
+    @command('!sticker|sticker')
     async imageSticker(data: MessageData) {
         if (data.message.type !== 'image') return
         const result = await this.imageStickerUsecase.execute(data)
         this.messageBus.send(result)
     }
     
-    @command('!sticker')
+    @command('!sticker|sticker')
     async videoSticker(data: MessageData) {
         if (data.message.type !== 'video') return
         const result = await this.videoStickerUsecase.execute(data)

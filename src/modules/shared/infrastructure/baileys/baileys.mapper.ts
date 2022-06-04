@@ -29,6 +29,7 @@ class Message implements MessageBody {
     text: string | undefined;
     media: Buffer | undefined;
     private message: proto.IMessage | Nullable
+    private isReply: boolean = false
 
     private constructor (data: proto.IWebMessageInfo) {
         this.type = this.getType(data.message)
@@ -48,11 +49,26 @@ class Message implements MessageBody {
             case 'conversation': return 'text'
             case 'videoMessage': return 'video'
             case 'imageMessage': return 'image'
+            case 'extendedTextMessage': {
+                this.isReply = true
+                return this.getReplyType(message)
+            }
+            default: return 'unkown'
+        }
+    }
+
+    private getReplyType (message: proto.IMessage | Nullable): MessageType {
+        const [ type ] = Object.keys(message?.extendedTextMessage?.contextInfo?.quotedMessage || {})
+        switch (type) {
+            case 'conversation': return 'text'
+            case 'videoMessage': return 'video'
+            case 'imageMessage': return 'image'
             default: return 'unkown'
         }
     }
 
     private getText (message: proto.IMessage | Nullable): string | undefined {
+        if (this.isReply) return message?.extendedTextMessage?.text || ''
         switch (this.type) {
             case 'text': return message?.conversation || ''
             case 'video': return message?.videoMessage?.caption || ''
@@ -63,10 +79,14 @@ class Message implements MessageBody {
     
     private async downloadMedia (): Promise<void> {
         try {
+            // validate type
             const validTypes = ['video', 'image']
             if (!validTypes.includes(this.type)) return
             const typeMessage = this.type == 'video' ? 'videoMessage' : 'imageMessage'
-            const message = <DownloadableMessage>this.message?.[typeMessage]
+            // set media message origin
+            let message = <DownloadableMessage>this.message?.[typeMessage]
+            if (this.isReply) message = <DownloadableMessage>this.message?.extendedTextMessage?.contextInfo?.quotedMessage?.[typeMessage]
+            // get media stream
             const stream = await downloadContentFromMessage(message, <any>this.type)
             this.media = Buffer.from([])
             for await(const chunk of stream)

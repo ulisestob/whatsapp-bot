@@ -22,9 +22,8 @@ export class BaileysConnection {
     }
 
     private reconnect () {
-        console.log('Reconnecting...')
-        this.socket = this.getSocket()
-        this.setListeners(this.socket.ev)
+        console.log('App Closed: Please Restart...')
+        process.exit()
     }
 
     private setListeners (socket: any): void {

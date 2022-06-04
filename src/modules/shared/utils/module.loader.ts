@@ -2,7 +2,11 @@ import { Container } from "inversify"
 import { MessageCommandBus } from "../domain/interfaces/messageCommandBus.interface"
 import { Command } from "./command.decorator"
 
-type Options = { commandModules: any[], messageCommandBus?: MessageCommandBus, globalDependencies: Container }
+type Options = { 
+  commandModules: any[],
+  messageCommandBus?: MessageCommandBus,
+  globalDependencies: Container
+}
 
 export class ModuleLoader {
   private constructor (private options: Options) {}
