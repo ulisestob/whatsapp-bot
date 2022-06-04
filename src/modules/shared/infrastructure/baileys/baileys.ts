@@ -24,6 +24,7 @@ export class BaileysMessageCommandBus implements MessageCommandBus {
     }
 
     send(body: SendData): void {
+        console.log('Sending to:', body.userId)
         const payload = SendMessageMapper.toSocket(body)
         this.socket.sendMessage(body.userId, payload)
     }
