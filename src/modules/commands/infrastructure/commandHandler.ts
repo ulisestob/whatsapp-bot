@@ -15,7 +15,7 @@ export class CommandHandler {
         @inject('VideoStickerUsecase') private videoStickerUsecase: VideoStickerUsecase
     ){}
 
-    @command('!help')
+    @command('!h-e-lp')
     async help(data: MessageData) {
         const result = await this.helpUsecase.execute(data)
         this.messageBus.send(result)

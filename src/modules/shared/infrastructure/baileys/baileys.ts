@@ -15,6 +15,7 @@ export class BaileysMessageCommandBus implements MessageCommandBus {
     attach(pattern: string, callback: (data: MessageData) => void): void {
         console.log('command:', pattern, 'attached!')
         this.socket.ev.on('messages.upsert', async (message) => {
+            console.log('MESSAGE', message.messages[0])
             const payload = await SendMessageMapper.toDomain(message)
             const messageText = payload?.message?.text || ''
             const containsPattern = this.testPattern(pattern, messageText)
