@@ -18,9 +18,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "start": "pm2 start 'node dist/main'",
-    "restart": "pm2 restart 'node dist/main'",
-    "logs": "pm2 logs 'node dist/main'",
-    "stop": "pm2 stop 'node dist/main'"
+    "restart": "pm2 restart main",
+    "logs": "pm2 logs main",
+    "stop": "pm2 stop main"
   },
   "dependencies": {
     "@adiwajshing/baileys": "^5.0.0",
