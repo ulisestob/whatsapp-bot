@@ -1,10 +1,41 @@
+# compiled output
 /dist
-/build
-/logs
-/npm-debug.log
 /node_modules
-.DS_Store
-.idea
-.env
+
+# Logs
+logs
 *.log
-*auth_info_multi_device.json
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.vscode
+yarn.lock
+auth_info
+
+.env
