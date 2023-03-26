@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import sharp from 'sharp';
+import * as sharp from 'sharp';
 import * as streamifier from 'streamifier';
 import * as fluent from 'fluent-ffmpeg';
 import * as tmp from 'tmp';
