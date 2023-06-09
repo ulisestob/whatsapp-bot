@@ -34,6 +34,7 @@ export class BaileysTransport
       auth: this.options.state,
       printQRInTerminal: true,
       syncFullHistory: false,
+      version: [2, 2311, 77],
     });
 
     socket.ev.on('creds.update', this.options.saveCreds);
