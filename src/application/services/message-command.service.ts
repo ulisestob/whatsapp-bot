@@ -95,15 +95,19 @@ export class MessageCommandService {
 
   private async chat(payload: RequestMessage): Promise<ResponseMessage> {
     const { conversationId, message } = payload;
+    const extendedTextMessage = message?.['message']?.['extendedTextMessage'];
+    const quotedMessage = extendedTextMessage?.['contextInfo'];
+    const extraText = quotedMessage?.['quotedMessage']?.['conversation'] || '';
     const text = message?.text || '';
     const whitelist: string[] = await this.firebaseService.getWhiteList();
     const [conversationNumber] = payload?.conversationId?.split('@');
     const [userNumber] = payload?.userId?.split('@');
     const prompt = text?.replace(CommandName.CHAT, '').trim();
+    const fullPromt = prompt + `\n\n"${extraText}"`;
     const isConversationNumber = whitelist?.includes(conversationNumber);
     const isUserNumber = whitelist?.includes(userNumber);
     if (isConversationNumber || isUserNumber) {
-      const response = await this.chatService.send(prompt);
+      const response = await this.chatService.send(fullPromt);
       return { conversationId, type: MessageResponseType.text, text: response };
     }
     return undefined;
