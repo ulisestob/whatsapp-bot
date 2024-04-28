@@ -16,7 +16,6 @@ export class BaileysClient extends ClientProxy {
 
   async connect(): Promise<any> {
     const { authInfoPath } = this.options;
-    console.log('connect');
     this._socket = await BaileysSocket.connect({ authInfoPath });
   }
 
@@ -27,7 +26,7 @@ export class BaileysClient extends ClientProxy {
   async dispatchEvent(packet: ReadPacket<any>): Promise<any> {
     switch (packet?.pattern) {
       case 'message:send': {
-        console.log('event: ', packet);
+        console.log('event', packet?.pattern);
         return this.sendMessage(packet?.data);
       }
       case 'message:template': {
@@ -51,6 +50,6 @@ export class BaileysClient extends ClientProxy {
 
   private sendMessage(body: ResponseMessage): void {
     const payload = SendMessageMapper.toSocket(body);
-    this._socket.sendMessage(body.conversationId, payload);
+    return this._socket.sendMessage(body.conversationId, payload);
   }
 }

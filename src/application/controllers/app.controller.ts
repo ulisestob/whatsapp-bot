@@ -30,6 +30,7 @@ export class AppController {
 
   @Post()
   sendMessage(@Body() body: any): Promise<ResponseMessage> {
+    console.log('send:msg', body);
     return this.messageCommandService.sendMessage(body);
   }
 }
