@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { useMultiFileAuthState } from '@adiwajshing/baileys';
 import * as admin from 'firebase-admin';
 
 import { AppModule } from './app.module';
@@ -28,15 +27,14 @@ async function bootstrap() {
     databaseURL: firebaseConfigs.dataBaseUrl,
   });
 
-  const { port, authInfoDir } = appConfigs;
-  const { state, saveCreds } = await useMultiFileAuthState(authInfoDir);
+  const { port, authInfoPath } = appConfigs;
 
   app.connectMicroservice({
-    strategy: new BaileysTransport({ state, saveCreds }),
+    strategy: new BaileysTransport({ authInfoPath }),
   });
 
-  await app.startAllMicroservices();
-  await app.listen(port);
+  app.startAllMicroservices();
+  app.listen(port);
 }
 
 bootstrap();

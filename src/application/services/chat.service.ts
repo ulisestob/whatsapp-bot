@@ -22,7 +22,7 @@ export class ChatService {
         model: 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'soy un bot, me llamo ARCHIE' },
-          { role: 'system', content: 'solo dare respuestas muycortas' },
+          { role: 'system', content: 'solo dare respuestas muy cortas' },
           { role: 'system', content: 'me expreso como mexicano' },
           { role: 'user', content: text || '' },
         ],

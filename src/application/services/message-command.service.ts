@@ -8,6 +8,7 @@ import { ChatService } from './chat.service';
 import { FirebaseService } from './firebase.service';
 import { MediaService } from './media.service';
 import * as random from 'random-number';
+import { BaileysClient } from 'src/infrastructure/proxies/baileys.proxy';
 
 @Injectable()
 export class MessageCommandService {
@@ -15,34 +16,28 @@ export class MessageCommandService {
     private firebaseService: FirebaseService,
     private chatService: ChatService,
     private mediaService: MediaService,
+    private baileysClient: BaileysClient,
   ) {}
 
   async handle(payload: RequestMessage): Promise<any> {
+    const commands: Record<CommandName, (payload: RequestMessage) => any> = {
+      [CommandName.PING]: (payload) => this.ping(payload),
+      [CommandName.HELP]: (payload) => this.help(payload),
+      [CommandName.STICKER]: (payload) => this.sticker(payload),
+      [CommandName.INSULT]: (payload) => this.insult(payload),
+      [CommandName.CHAT]: (payload) => this.chat(payload),
+    };
     const text = payload?.message?.text || '';
-
     if (payload?.fromMe) return undefined;
+    const command = this.getCommand(text);
+    return commands?.[command]?.(payload);
+  }
 
-    if (this.testPattern(CommandName.PING, text)) {
-      return this.ping(payload);
+  private getCommand(text: string): CommandName {
+    const keys = Object.keys(CommandName);
+    for (const key of keys) {
+      if (this.testPattern(key, text)) return CommandName[key];
     }
-
-    if (this.testPattern(CommandName.HELP, text)) {
-      return this.help(payload);
-    }
-
-    if (this.testPattern(CommandName.STICKER, text)) {
-      return this.sticker(payload);
-    }
-
-    if (this.testPattern(CommandName.INSULT, text)) {
-      return this.insult(payload);
-    }
-
-    if (this.testPattern(CommandName.CHAT, text)) {
-      return this.chat(payload);
-    }
-
-    return undefined;
   }
 
   private testPattern(pattern: string, text: string): boolean {
@@ -111,5 +106,20 @@ export class MessageCommandService {
       return { conversationId, type: MessageResponseType.text, text: response };
     }
     return undefined;
+  }
+
+  async sendMessage(payload: {
+    to: string;
+    message: string;
+  }): Promise<ResponseMessage> {
+    const { message, to } = payload;
+    const conversationId = `${to}@s.whatsapp.net`;
+    const data = {
+      text: `${message}\n\n_Estes es un mensaje de prueba ⚠️_`,
+      conversationId,
+      type: MessageResponseType.text,
+    };
+    this.baileysClient.emit('message:send', data);
+    return data;
   }
 }

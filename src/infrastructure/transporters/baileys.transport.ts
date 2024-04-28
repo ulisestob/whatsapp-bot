@@ -1,20 +1,17 @@
-import WhatsAppSocket, {
-  AuthenticationState,
-  DisconnectReason,
-} from '@adiwajshing/baileys';
 import {
   Server,
   CustomTransportStrategy,
   BaseRpcContext,
+  Transport,
 } from '@nestjs/microservices';
 import { RequestMessage } from 'src/domain/types/request-message.type';
 import { ResponseMessage } from 'src/domain/types/response-message.type';
-import { SendMessageMapper } from './baileys.mapper';
+import { SendMessageMapper } from '../mappers/baileys.mapper';
 import { Logger } from '@nestjs/common';
+import { BaileysSocket } from '../socket/baileys.socket';
 
 type Options = {
-  state: AuthenticationState;
-  saveCreds: () => Promise<void>;
+  authInfoPath: string;
 };
 
 export class BaileysTransport
@@ -24,36 +21,15 @@ export class BaileysTransport
   constructor(private options: Options) {
     super();
   }
+  transportId?: symbol | Transport;
 
-  listen() {
+  async listen() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const parent = this;
-    console.log('baileys started');
+    const { authInfoPath } = this.options;
+    const socket = await BaileysSocket.connect({ authInfoPath });
 
-    const socket = WhatsAppSocket({
-      auth: this.options.state,
-      printQRInTerminal: true,
-      syncFullHistory: false,
-      version: [2, 2411, 77],
-    });
-
-    socket.ev.on('creds.update', this.options.saveCreds);
-
-    socket.ev.on('connection.update', (data) => {
-      const { connection, lastDisconnect } = data;
-
-      if (connection === 'open') console.log('opened connection');
-
-      if (connection === 'close') {
-        const statusCode = (lastDisconnect?.error as any)?.output?.statusCode;
-        const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
-        console.error(lastDisconnect?.error);
-        console.info('reconnecting:', shouldReconnect);
-        if (shouldReconnect) process.exit();
-      }
-    });
-
-    socket.ev.on('group-participants.update', async (data) => {
+    socket?.ev.on('group-participants.update', async (data) => {
       console.log('group-participants.update', data);
       try {
         const message = { ...data, conversationId: data?.id };
@@ -71,7 +47,7 @@ export class BaileysTransport
       }
     });
 
-    socket.ev.on('messages.upsert', async (data) => {
+    socket?.ev.on('messages.upsert', async (data) => {
       try {
         // const MY_CONVERSATION = 'xxxxxxxxxxxxxxxxxx@g.us';
         const message = await SendMessageMapper.toDomain(data);
@@ -95,7 +71,7 @@ export class BaileysTransport
   }
 
   close() {
-    console.log('baileys closed');
+    Logger.log('connection closed', 'Baileys');
   }
 
   private sendMessage(socket: any, body: ResponseMessage): void {
