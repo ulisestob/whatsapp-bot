@@ -36,7 +36,7 @@ export class MessageCommandService {
   private getCommand(text: string): CommandName {
     const keys = Object.keys(CommandName);
     for (const key of keys) {
-      if (this.testPattern(key, text)) return CommandName[key];
+      if (this.testPattern(CommandName[key], text)) return CommandName[key];
     }
   }
 
