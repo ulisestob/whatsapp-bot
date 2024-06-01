@@ -4,4 +4,5 @@ export enum CommandName {
   STICKER = '!sticker|sticker',
   CHAT = '!chat',
   INSULT = '!insult',
+  PERMISSION = '!permiso',
 }

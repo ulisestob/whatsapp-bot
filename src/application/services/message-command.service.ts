@@ -26,6 +26,7 @@ export class MessageCommandService {
       [CommandName.STICKER]: (payload) => this.sticker(payload),
       [CommandName.INSULT]: (payload) => this.insult(payload),
       [CommandName.CHAT]: (payload) => this.chat(payload),
+      [CommandName.PERMISSION]: (payload) => this.permission(payload),
     };
     const text = payload?.message?.text || '';
     if (payload?.fromMe) return undefined;
@@ -104,6 +105,26 @@ export class MessageCommandService {
     if (isConversationNumber || isUserNumber) {
       const response = await this.chatService.send(fullPromt);
       return { conversationId, type: MessageResponseType.text, text: response };
+    }
+    return undefined;
+  }
+
+  private async permission(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const { mentions } = message;
+    const adminlist: string[] = await this.firebaseService.getAdminList();
+    const [conversationNumber] = payload?.conversationId?.split('@');
+    const [userNumber] = payload?.userId?.split('@');
+    const isConversationNumber = adminlist?.includes(conversationNumber);
+    const isUserNumber = adminlist?.includes(userNumber);
+    if (isConversationNumber || isUserNumber) {
+      const people = mentions?.map((item) => '@' + item?.split('@')[0]);
+      const numbers = mentions?.map((item) =>
+        this.firebaseService.addOneToWhiteList(item?.split('@')[0]),
+      );
+      await Promise.all(numbers);
+      const text = `Listo! acceso permitido para ${people.join(' ')}`;
+      return { conversationId, type: MessageResponseType.text, text, mentions };
     }
     return undefined;
   }
