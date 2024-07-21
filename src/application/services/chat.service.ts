@@ -1,33 +1,53 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
+
 import { appConfig } from 'src/configs/app.config';
 
 @Injectable()
 export class ChatService {
-  private openai: OpenAIApi;
+  private openai: OpenAI;
 
   constructor(
     @Inject(appConfig.KEY) private configs: ConfigType<typeof appConfig>,
   ) {
     const apiKey = this.configs.openAiApiKey;
-    const configuration = new Configuration({ apiKey });
-    this.openai = new OpenAIApi(configuration);
+    this.openai = new OpenAI({ apiKey });
   }
 
-  async send(text: string): Promise<string> {
+  async send(text: string, imageBase64: string): Promise<string> {
     try {
-      const result = await this.openai.createChatCompletion({
+      const userMessages: Record<string, any>[] = [
+        { type: 'text', text: text || '' },
+      ];
+
+      if (imageBase64) {
+        userMessages.push({
+          type: 'image_url',
+          image_url: { url: imageBase64, detail: 'low' },
+        });
+      }
+
+      const result = await this.openai.chat.completions.create({
         n: 1,
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'soy un bot, me llamo ARCHIE' },
-          { role: 'system', content: 'solo dare respuestas muy cortas' },
-          { role: 'system', content: 'me expreso como mexicano' },
-          { role: 'user', content: text || '' },
+          {
+            role: 'system',
+            content: <any>[
+              { type: 'text', text: 'soy un bot, me llamo ARCHIE.' },
+              { type: 'text', text: 'soy creado por @ulisse.' },
+              { type: 'text', text: 'solo dare respuestas muy cortas.' },
+              { type: 'text', text: 'me expreso como mexicano.' },
+            ],
+          },
+          {
+            role: 'user',
+            content: userMessages as any,
+          },
         ],
       });
-      return result?.data?.choices?.[0]?.message?.content;
+      return result?.choices?.[0]?.message?.content;
     } catch (err) {
       Logger.error('Error on ChatGPT response');
       throw err;

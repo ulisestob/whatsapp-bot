@@ -90,6 +90,11 @@ class Message implements MessageBody {
         return MessageType.video;
       case 'imageMessage':
         return MessageType.image;
+      case 'stickerMessage': {
+        const { quotedMessage } = message.extendedTextMessage.contextInfo;
+        quotedMessage.imageMessage = quotedMessage.stickerMessage;
+        return MessageType.image;
+      }
       default:
         return MessageType.unkown;
     }

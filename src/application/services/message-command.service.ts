@@ -95,6 +95,8 @@ export class MessageCommandService {
     const quotedMessage = extendedTextMessage?.['contextInfo'];
     const extraText = quotedMessage?.['quotedMessage']?.['conversation'] || '';
     const text = message?.text || '';
+    const image = Buffer.from(message?.media || []).toString('base64') || null;
+    const imageB64 = image ? `data:image/png;base64, ${image}` : null;
     const whitelist: string[] = await this.firebaseService.getWhiteList();
     const [conversationNumber] = payload?.conversationId?.split('@');
     const [userNumber] = payload?.userId?.split('@');
@@ -103,7 +105,7 @@ export class MessageCommandService {
     const isConversationNumber = whitelist?.includes(conversationNumber);
     const isUserNumber = whitelist?.includes(userNumber);
     if (isConversationNumber || isUserNumber) {
-      const response = await this.chatService.send(fullPromt);
+      const response = await this.chatService.send(fullPromt, imageB64);
       return { conversationId, type: MessageResponseType.text, text: response };
     }
     return undefined;
