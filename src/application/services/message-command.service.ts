@@ -94,14 +94,22 @@ export class MessageCommandService {
     const extendedTextMessage = message?.['message']?.['extendedTextMessage'];
     const quotedMessage = extendedTextMessage?.['contextInfo'];
     const extraText = quotedMessage?.['quotedMessage']?.['conversation'] || '';
+
     const text = message?.text || '';
+    let audiotext = '';
+
+    if (message.type === MessageType.audio) {
+      audiotext = await this.chatService.speechToText(message?.media);
+      message.media = null;
+    }
     const image = Buffer.from(message?.media || []).toString('base64') || null;
     const imageB64 = image ? `data:image/png;base64, ${image}` : null;
+
     const whitelist: string[] = await this.firebaseService.getWhiteList();
     const [conversationNumber] = payload?.conversationId?.split('@');
     const [userNumber] = payload?.userId?.split('@');
     const prompt = text?.replace(CommandName.CHAT, '').trim();
-    const fullPromt = prompt + `\n\n"${extraText}"`;
+    const fullPromt = prompt + `\n\n"${audiotext}"` + `\n\n"${extraText}"`;
     const isConversationNumber = whitelist?.includes(conversationNumber);
     const isUserNumber = whitelist?.includes(userNumber);
     if (isConversationNumber || isUserNumber) {

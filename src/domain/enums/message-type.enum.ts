@@ -3,6 +3,8 @@ export enum MessageType {
   'listMessage' = 'listMessage',
   'image' = 'image',
   'video' = 'video',
+  'audio' = 'audio',
+  'sticker' = 'sticker',
   'buttonsMessage' = 'buttonsMessage',
   'unkown' = 'unkown',
 }

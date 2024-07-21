@@ -90,11 +90,10 @@ class Message implements MessageBody {
         return MessageType.video;
       case 'imageMessage':
         return MessageType.image;
-      case 'stickerMessage': {
-        const { quotedMessage } = message.extendedTextMessage.contextInfo;
-        quotedMessage.imageMessage = quotedMessage.stickerMessage;
-        return MessageType.image;
-      }
+      case 'stickerMessage':
+        return MessageType.sticker;
+      case 'audioMessage':
+        return MessageType.audio;
       default:
         return MessageType.unkown;
     }
@@ -123,9 +122,16 @@ class Message implements MessageBody {
   private async downloadMedia(): Promise<void> {
     try {
       // validate type
-      const validTypes = ['video', 'image'];
+      const validTypes = ['video', 'image', 'audio', 'sticker'];
       if (!validTypes.includes(this.type)) return;
-      const type = this.type == 'video' ? 'videoMessage' : 'imageMessage';
+
+      const typeMap: Record<string, string> = {
+        [MessageType.video]: 'videoMessage',
+        [MessageType.audio]: 'audioMessage',
+        [MessageType.image]: 'imageMessage',
+        [MessageType.sticker]: 'stickerMessage',
+      };
+      const type = typeMap[this.type] || 'imageMessage';
       // set media message origin
       let message = <DownloadableMessage>this.message?.[type];
       if (this.isReply) {
