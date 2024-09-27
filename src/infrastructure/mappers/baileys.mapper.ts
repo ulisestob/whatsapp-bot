@@ -4,7 +4,7 @@ import {
   downloadContentFromMessage,
   proto,
   WAMessage,
-} from '@adiwajshing/baileys';
+} from 'baileys';
 
 import {
   MessageBody,

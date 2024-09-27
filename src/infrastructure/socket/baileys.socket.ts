@@ -1,7 +1,7 @@
 import WhatsAppSocket, {
   DisconnectReason,
   useMultiFileAuthState,
-} from '@adiwajshing/baileys';
+} from 'baileys';
 import { Logger } from '@nestjs/common';
 import P from 'pino';
 
@@ -20,7 +20,7 @@ export class BaileysSocket {
       auth: state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      version: [2, 2419, 11],
+      version: [2, 3000, 1015901307],
       logger: P({ level: 'error' }) as any,
     });
 

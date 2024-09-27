@@ -23,7 +23,7 @@
     "stop": "pm2 stop main"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
+    "baileys": "^6.7.8",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.0.0",
     "@nestjs/common": "^9.0.0",
