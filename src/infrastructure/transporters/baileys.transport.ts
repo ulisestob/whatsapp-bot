@@ -9,6 +9,7 @@ import { ResponseMessage } from 'src/domain/types/response-message.type';
 import { SendMessageMapper } from '../mappers/baileys.mapper';
 import { Logger } from '@nestjs/common';
 import { BaileysSocket } from '../socket/baileys.socket';
+import { WAMessage } from 'baileys';
 
 type Options = {
   authInfoPath: string;
@@ -54,6 +55,7 @@ export class BaileysTransport
         // if (MY_CONVERSATION === message.conversationId) {
         if (!message?.fromMe) {
           this.logMessage(message);
+          this.readMessage(socket, data);
           const pattern = 'message';
           const handler = parent.messageHandlers.get(pattern);
           const ctx = new BaseRpcContext(<any>{});
@@ -62,8 +64,8 @@ export class BaileysTransport
             const result: ResponseMessage = await handler(payload, ctx);
             result && this.sendMessage(socket, result);
           }
-          // }
         }
+        // }
       } catch (err) {
         console.log(err);
       }
@@ -77,6 +79,13 @@ export class BaileysTransport
   private sendMessage(socket: any, body: ResponseMessage): void {
     const payload = SendMessageMapper.toSocket(body);
     socket.sendMessage(body.conversationId, payload);
+  }
+
+  private readMessage(socket: any, data: { messages: WAMessage[] }): void {
+    const [message] = data?.messages;
+    if (message?.key) {
+      socket.readMessages([message?.key]);
+    }
   }
 
   private logMessage(message: RequestMessage): void {
