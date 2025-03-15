@@ -20,7 +20,7 @@ export class BaileysSocket {
       auth: state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      version: [2, 3000, 1015901307],
+      version: [2, 3000, 1019707846],
       logger: P({ level: 'error' }) as any,
     });
 

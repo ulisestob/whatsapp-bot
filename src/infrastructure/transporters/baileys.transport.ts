@@ -84,7 +84,7 @@ export class BaileysTransport
   private readMessage(socket: any, data: { messages: WAMessage[] }): void {
     const [message] = data?.messages;
     if (message?.key) {
-      socket.readMessages([message?.key]);
+      socket.readMessages([message?.key]).then().catch();
     }
   }
 
