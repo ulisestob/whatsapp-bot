@@ -111,7 +111,8 @@ export class MessageCommandService {
     const prompt = text?.replace(CommandName.CHAT, '').trim();
     const fullPromt = prompt + `\n\n"${audiotext}"` + `\n\n"${extraText}"`;
     const isConversationNumber = whitelist?.includes(conversationNumber);
-    const isUserNumber = whitelist?.includes(userNumber);
+    // const isUserNumber = whitelist?.includes(userNumber);
+    const isUserNumber = true;
     if (isConversationNumber || isUserNumber) {
       const response = await this.chatService.send(fullPromt, imageB64);
       return { conversationId, type: MessageResponseType.text, text: response };

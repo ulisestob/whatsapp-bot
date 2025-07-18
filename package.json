@@ -23,7 +23,6 @@
     "stop": "pm2 stop main"
   },
   "dependencies": {
-    "baileys": "^6.7.16",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.0.0",
     "@nestjs/common": "^9.0.0",
@@ -32,10 +31,13 @@
     "@nestjs/microservices": "^9.3.12",
     "@nestjs/platform-express": "^9.0.0",
     "@types/random-number": "^0.0.1",
+    "baileys": "^6.7.18",
     "firebase-admin": "^11.5.0",
     "fluent-ffmpeg": "^2.1.2",
+    "node-cache": "^5.1.2",
     "openai": "^4.52.7",
     "pino": "^9.0.0",
+    "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "random-number": "^0.0.9",
     "reflect-metadata": "^0.1.13",
