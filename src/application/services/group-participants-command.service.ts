@@ -10,9 +10,9 @@ export class GroupParticipantsCommandService {
   constructor(private firebaseService: FirebaseService) {}
 
   async handle(payload: RequestGroupParticipantsUpdate): Promise<any> {
-    if (payload.action === 'add') {
-      return this.welcomeMessage(payload);
-    }
+    // if (payload.action === 'add') {
+    //   return this.welcomeMessage(payload);
+    // }
     return undefined;
   }
 
