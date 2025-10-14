@@ -28,7 +28,7 @@ export class BaileysSocket {
       },
       syncFullHistory: false,
       shouldSyncHistoryMessage: () => false,
-      version: [2, 3000, 1023223821],
+      version: [2, 3000, 1027934701],
       logger: P({ level: 'error' }) as any,
       userDevicesCache,
       msgRetryCounterCache,
